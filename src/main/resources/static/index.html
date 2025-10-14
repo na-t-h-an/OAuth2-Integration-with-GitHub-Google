@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OAuth Login Demo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            background: linear-gradient(120deg, #f3f4f6, #fff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            text-align: center;
+            background: #fff;
+            padding: 2rem 3rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1, h3 {
+            margin: 0.25rem 0;
+        }
+        a.login-btn {
+            display: inline-block;
+            margin: .5rem;
+            padding: .75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 600;
+        }
+        .google {
+            background: #4285F4;
+        }
+        .github {
+            background: #24292F;
+        }
+        small {
+            color: #6b7280;
+            display: block;
+            margin-top: .75rem;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>OAuth Login Demo</h1>
+    <h3>Nathan Xander Lada</h3>
+    <h3>IT342 - G01</h3>
+    <br>
+
+    <a href="/oauth2/authorization/google" class="login-btn google">Login with Google</a>
+    <a href="/oauth2/authorization/github" class="login-btn github">Login with GitHub</a>
+
+    <small>You will be redirected to your profile after login.</small>
+</div>
+</body>
+</html>
