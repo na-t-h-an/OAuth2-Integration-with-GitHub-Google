@@ -1,6 +1,5 @@
 package com.lada.oauthlogin.repository;
 
-// AuthProviderRepository.java
 import com.lada.oauthlogin.model.AuthProvider;
 import com.lada.oauthlogin.model.AuthProvider.Provider;
 import com.lada.oauthlogin.model.User;

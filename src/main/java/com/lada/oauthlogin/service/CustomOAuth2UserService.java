@@ -39,14 +39,18 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User delegate = super.loadUser(userRequest);
         Map<String, Object> attrs = new HashMap<>(delegate.getAttributes());
 
-        String regId = userRequest.getClientRegistration().getRegistrationId(); // "google" or "github"
-        String idAttr = userRequest.getClientRegistration()
-                .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
+        log.warn(">>> CustomOAuth2UserService.loadUser() called for provider: {}", userRequest.getClientRegistration().getRegistrationId());
 
-        log.info(">>> OAuth2 login via {}", regId);
-        log.debug("Raw attributes: {}", attrs);
+        String regId = userRequest.getClientRegistration().getRegistrationId(); // "google" or "github"
+
+        String idAttr = userRequest.getClientRegistration()
+            .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
+        log.debug("UserNameAttributeName resolved: {}", idAttr);
+        log.debug("Attributes: {}", attrs);  // NEW LINE
 
         String providerUserId = str(attrs.get(idAttr));
+        log.debug("providerUserId resolved: {}", providerUserId);
+
         if (providerUserId == null) {
             throw new OAuth2AuthenticationException("Missing provider user ID");
         }
@@ -108,6 +112,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .findByProviderAndProviderUserId(providerEnum, providerUserId)
                 .orElse(null);
 
+
+        log.warn("existing is null? {}", existing == null);
+        if (existing != null) {
+            log.warn("Found existing AuthProvider match: provider={}, userId={}, email={}",
+                existing.getProvider(), existing.getProviderUserId(), existing.getProviderEmail());
+        }
+
         if (existing == null) {
             log.info("Linking provider {} to user {}", regId, email);
             AuthProvider ap = new AuthProvider();
@@ -116,7 +127,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             ap.setProviderEmail(email);
             ap.setUser(user);
             authProviderRepository.saveAndFlush(ap);
+
+            log.info("Successfully saved AuthProvider!");
+            authProviderRepository.findAll().forEach(p ->
+                log.info("AuthProvider: id={}, provider={}, providerUserId={}, email={}, userId={}",
+                    p.getId(), p.getProvider(), p.getProviderUserId(), p.getProviderEmail(), p.getUser().getId())
+                    );
         }
+
+        
 
         // 3. Update missing fields if needed
         boolean dirty = false;

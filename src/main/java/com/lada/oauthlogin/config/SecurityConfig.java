@@ -1,6 +1,8 @@
 package com.lada.oauthlogin.config;
 
 import com.lada.oauthlogin.service.CustomOAuth2UserService;
+import com.lada.oauthlogin.service.DelegatingOidcUserService;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -15,9 +17,11 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final DelegatingOidcUserService delegatingOidcUserService;
 
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, DelegatingOidcUserService delegatingOidcUserService) {
         this.customOAuth2UserService = customOAuth2UserService;
+        this.delegatingOidcUserService = delegatingOidcUserService;
     }
 
     @Bean
@@ -43,9 +47,12 @@ public class SecurityConfig {
 
                 // GitHub via Spring OAuth2 (keep working)
                 .oauth2Login(oauth -> oauth
-                        .loginPage("/")                               // your index page
+                        .loginPage("/")                              
                         .defaultSuccessUrl("/profile.html", true)
-                        .userInfoEndpoint(u -> u.userService(customOAuth2UserService))
+                        .userInfoEndpoint(u -> u
+                                .userService(customOAuth2UserService)
+                                .oidcUserService(delegatingOidcUserService)  
+                        )
                 )
 
                 .logout(logout -> logout
