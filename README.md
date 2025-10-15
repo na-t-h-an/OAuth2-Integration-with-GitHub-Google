@@ -111,6 +111,9 @@ spring.security.oauth2.client.registration.google.client-secret=YOUR_GOOGLE_CLIE
 spring.security.oauth2.client.registration.google.scope=openid,profile,email
 spring.security.oauth2.client.registration.google.redirect-uri={baseUrl}/login/oauth2/code/{registrationId}
 spring.security.oauth2.client.registration.google.client-name=Google
+spring.security.oauth2.client.registration.google.provider=google
+spring.security.oauth2.client.provider.google.user-name-attribute=sub
+spring.security.oauth2.client.provider.google.user-info-uri=https://www.googleapis.com/oauth2/v3/userinfo
 
 # --- GitHub OAuth2 ---
 spring.security.oauth2.client.registration.github.client-id=YOUR_GITHUB_CLIENT_ID
