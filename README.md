@@ -12,6 +12,55 @@ This project demonstrates how to implement OAuth2 login using **Google** and **G
 - Security: Spring Security OAuth2 Client
 - Database: H2 (in-memory, development mode)
 - Frontend: Static HTML/CSS/JS (`/static` folder)
+```
++--------------------+
+|    User Browser    |
++--------------------+
+          |
+          v
++------------------------------+
+| Static Frontend (HTML/CSS/JS)|
++------------------------------+
+          |
+          v
++-----------------------------------------+
+| Spring Boot Backend (OAuth Login Demo)  |
+|                                         |
+|  +-----------------------------------+  |
+|  | Spring Security OAuth2 Client     |  |
+|  |  - Handles login redirects        |  |
+|  |  - Fetches access tokens          |  |
+|  |  - Loads user info (OIDC/OAuth2)  |  |
+|  +----------------+------------------+  |
+|                       |                 |
+|                       v                 |
+|  +-----------------------------------+  |
+|  | CustomOAuth2UserService           |  |
+|  |  - Maps user info to DB record    |  |
+|  |  - Links AuthProvider entries     |  |
+|  +----------------+------------------+  |
+|                       |                 |
+|                       v                 |
+|  +-----------------------------------+  |
+|  | DelegatingOidcUserService         |  |
+|  |  - Wraps Google OIDC login        |  |
+|  |  - Returns compliant OidcUser     |  |
+|  +-----------------------------------+  |
++-----------------------------------------+
+          |
+          v
++------------------------------+
+|     H2 In-Memory Database    |
+|  ┌────────────────────────┐  |
+|  │      users table       │  |
+|  │ ─ id, email, name...   │  |
+|  └────────────────────────┘  |
+|  ┌────────────────────────┐  |
+|  │  auth_providers table  │  |
+|  │ ─ provider, sub, FK... │  |
+|  └────────────────────────┘  |
++------------------------------+
+```
 
 **Authentication Flow:**
 1. User clicks "Login with Google" or "Login with GitHub" from `index.html`
